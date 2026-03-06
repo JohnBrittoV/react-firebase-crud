@@ -30,18 +30,17 @@ export const CreateUserDetails = () => {
     return(
         
         <div className="flex flex-col items-center
-                        gap-4 justify-center m-10
-                        text-lg"> 
+                        gap-4 justify-center m-10"> 
             
             <h2 className='font-bold 
                            text-2xl'>
-                        Enter User Details</h2>
+                Enter User Details</h2>
             
             
             <input className="p-3 w-lg border
                               rounded text-sm"
-                   type="text" name="firstName" 
-                   id="firstName" placeholder="Full Name"
+                   type="text" name="Name" 
+                   id="Name" placeholder="Full Name"
                    value={name}
                    onChange={(e) => {setName(e.target.value)}}/>
 

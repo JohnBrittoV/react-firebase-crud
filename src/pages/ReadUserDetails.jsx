@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { doc, getDocs, collection, deleteDoc } from "firebase/firestore"
 import { db } from "../services/firebase.config";
+import { Modal } from '../components/Modal';
 import editIcon from '../assets/icons/edit-icon.svg';
 import deleteIcon from '../assets/icons/delete-icon.svg';
 
 export const ReadUserDetails = () => {
 
-    const [userDetails, setUserDetails] = useState([])
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [userDetails, setUserDetails] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
     
     useEffect(() => {
         const userData = async () => {
@@ -41,8 +44,10 @@ export const ReadUserDetails = () => {
         }
     }
 
-    const handleUpdate = (id) => {
-        console.log(id)
+    const handleUpdate = (user) => {
+        console.log(user);
+        setSelectedUser(user);
+        setIsOpen(true);
     }
     
     return(
@@ -55,7 +60,7 @@ export const ReadUserDetails = () => {
                            text-2xl'>
                         Users Data</h2>
 
-            <div className='grid grid-cols-[40px_200px_80px_150px_40px_40px]
+            <div className='grid grid-cols-[40px_200px_80px_200px_40px_40px]
                             font-semibold border-b pb-2  
                             justify-center items-center'>
                 <p>#</p>
@@ -69,39 +74,45 @@ export const ReadUserDetails = () => {
             {userDetails.map((user, index) => {
 
                 return (
-                    <div className='grid odd:bg-white even:bg-amber-100
-                                    grid-cols-[40px_200px_80px_150px_40px_40px]
+                
+                    <div className='grid even:bg-white odd:bg-gray-100
+                                    grid-cols-[40px_200px_80px_200px_40px_40px]
                                     py-2 border-b items-center' 
 
                         key={user.id}>
 
-                        <p className=''>
+                        <p className='text-lg mx-2'>
                         {index + 1}.</p> 
 
-                        <p className=''>
+                        <p className='text-lg'>
                         {user.name} </p> 
 
-                        <p className=''>
+                        <p className='text-lg'>
                         {user.age} </p> 
 
-                        <p className=''>
+                        <p className='text-lg'>
                         {user.job} </p> 
 
-                        <img className='w-4 hover:translate-y-2 
+                        <img className='w-4 hover:translate-y-1 
                                         all duration-200'
                              src={editIcon} 
                              alt="edit" 
-                             onClick={() => {handleUpdate(user.id)}}/>
+                             onClick={() => handleUpdate(user)}/>
                         
-                        <img className='w-5 hover:translate-y-2 
+                        <img className='w-5 hover:translate-y-1 
                                         all duration-200'
                              src={deleteIcon} 
                              alt="delete" 
                              onClick={() => {handleDelete(user.id)}}/>
                     </div>
                 )
-            })   
-            }
+            })}
+
+            {isOpen && (
+                <Modal className="transition ease-out duration-500"
+                    user={selectedUser}
+                    closeModal={() => setIsOpen(false)}/>
+            )}
                    
         </div>
     )
