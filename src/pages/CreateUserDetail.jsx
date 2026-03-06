@@ -32,23 +32,27 @@ export const CreateUserDetails = () => {
         <div className="flex flex-col items-center
                         gap-4 justify-center m-10
                         text-lg"> 
-            Enter User Details
             
-            <input className="p-3 w-1/4 border
+            <h2 className='font-bold 
+                           text-2xl'>
+                        Enter User Details</h2>
+            
+            
+            <input className="p-3 w-lg border
                               rounded text-sm"
                    type="text" name="firstName" 
                    id="firstName" placeholder="Full Name"
                    value={name}
                    onChange={(e) => {setName(e.target.value)}}/>
 
-            <input className="p-3 w-1/4 border
+            <input className="p-3 w-lg border
                               rounded text-sm"
                    type="text" name="age" 
                    id="age" placeholder="Enter your age"
                    value={age}
                    onChange={(e) => {setAge(e.target.value)}}/>
 
-            <input className="p-3 w-1/4 border
+            <input className="p-3 w-lg border
                               rounded text-sm"
                    type="text" name="job" 
                    id="job" placeholder="Enter occupation" 
@@ -56,7 +60,7 @@ export const CreateUserDetails = () => {
                    onChange={(e)=> {setJob(e.target.value)}}/>
 
             <button className="bg-amber-400 rounded-2xl
-                               w-1/4 h-10  text-sm
+                               w-1/2 h-10  text-sm
                                hover:translate-y-2
                                duration-200"
                     onClick={handleSubmit}>
