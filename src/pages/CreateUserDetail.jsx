@@ -38,28 +38,28 @@ export const CreateUserDetails = () => {
             
             
             <input className="p-3 w-lg border
-                              rounded text-sm"
+                              rounded text-lg"
                    type="text" name="Name" 
                    id="Name" placeholder="Full Name"
                    value={name}
                    onChange={(e) => {setName(e.target.value)}}/>
 
             <input className="p-3 w-lg border
-                              rounded text-sm"
+                              rounded text-lg"
                    type="text" name="age" 
                    id="age" placeholder="Enter your age"
                    value={age}
                    onChange={(e) => {setAge(e.target.value)}}/>
 
             <input className="p-3 w-lg border
-                              rounded text-sm"
+                              rounded text-lg"
                    type="text" name="job" 
                    id="job" placeholder="Enter occupation" 
                    value={job}
                    onChange={(e)=> {setJob(e.target.value)}}/>
 
             <button className="bg-amber-400 rounded-2xl
-                               w-1/2 h-10  text-sm
+                               w-1/2 h-10  text-lg
                                hover:translate-y-2
                                duration-200"
                     onClick={handleSubmit}>

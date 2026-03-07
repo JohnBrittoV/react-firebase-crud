@@ -1,6 +1,10 @@
 import closeIcon from '../assets/icons/close-icon.svg';
 export const Modal = ({user, closeModal}) =>{
 
+    const handleUpdate = () => {
+        
+    }
+
     return(
         <div className='fixed inset-0 flex
                         items-center justify-center
@@ -48,7 +52,7 @@ export const Modal = ({user, closeModal}) =>{
                                     w-1/2 h-10 text-md
                                     hover:translate-y-0.5
                                     duration-200 mt-3"
-                            >
+                            onClick={handleUpdate}>
                         Update Details
                     </button>
                 </div>

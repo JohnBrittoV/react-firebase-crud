@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, getDocs, collection, deleteDoc } from "firebase/firestore"
+import { doc, getDocs, collection, deleteDoc, onSnapshot } from "firebase/firestore"
 import { db } from "../services/firebase.config";
 import { Modal } from '../components/Modal';
 import editIcon from '../assets/icons/edit-icon.svg';
@@ -12,21 +12,20 @@ export const ReadUserDetails = () => {
     const [isOpen, setIsOpen] = useState(false);
     
     useEffect(() => {
-        const userData = async () => {
-            try {
-                const userRef = collection(db, "userData");
-                const userDoc = await getDocs(userRef);
-                
-                if(!userDoc.empty){
-                    const userData = userDoc.docs.map((data) => ({
-                        id: data.id, ...data.data()}))
-                        setUserDetails(userData)
-                }
-            } catch (error) {
-                console.log(error.message)
+        
+        const getUser = onSnapshot(
+            collection(db, "userData"),
+            (snapshot) => {
+
+                const userData = snapshot.docs.map(doc => ({
+                    id: doc.id,...doc.data()
+                }))
+
+                setUserDetails(userData);
             }
-        }
-        userData();
+        );
+
+        return () => getUser();
     }, [])
 
     const handleDelete = async(id) => {
@@ -93,14 +92,14 @@ export const ReadUserDetails = () => {
                         <p className='text-lg'>
                         {user.job} </p> 
 
-                        <img className='w-4 hover:translate-y-1 
-                                        all duration-200'
+                        <img className='w-4 hover:translate-y-0.5 
+                                        all duration-100'
                              src={editIcon} 
                              alt="edit" 
                              onClick={() => handleUpdate(user)}/>
                         
-                        <img className='w-5 hover:translate-y-1 
-                                        all duration-200'
+                        <img className='w-5 hover:translate-y-0.5 
+                                        all duration-100'
                              src={deleteIcon} 
                              alt="delete" 
                              onClick={() => {handleDelete(user.id)}}/>
