@@ -60,7 +60,7 @@ export const CreateUserDetails = () => {
 
             <button className="bg-amber-400 rounded-2xl
                                w-1/2 h-10  text-lg
-                               hover:translate-y-2
+                               hover:translate-y-0.5
                                duration-200"
                     onClick={handleSubmit}>
                     Save Details</button>
