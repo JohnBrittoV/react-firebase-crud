@@ -1,0 +1,34 @@
+/*
+    complete work flow user update data
+    ------------------------------------
+
+    User clicks edit (parent component)
+        ↓
+    selectedUser set
+        ↓
+    Modal opens 
+        ↓
+    useEffect fills inputs
+        ↓
+    originalData = Firestore data
+    input = Firestore data
+        ↓
+    Inputs are filled with user data
+        ↓
+    User edits inputs one or more fields
+        ↓
+    handleChange updates input state
+        ↓
+    Compare input vs OriginalData
+        ↓
+    If true button disabled otherwise enable
+        ↓
+    Click Update
+        ↓
+    updateDoc()
+        ↓
+    Firestore updates
+        ↓
+    onSnapshot updates UI
+
+*/

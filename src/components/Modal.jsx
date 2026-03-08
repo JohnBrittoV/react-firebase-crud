@@ -5,22 +5,32 @@ import closeIcon from '../assets/icons/close-icon.svg';
 
 export const Modal = ({user, closeModal}) =>{
 
+    const [orginalData, setOriginalData] = useState(null);
     const [input, setInput] = useState({
         name: "",
         age: "",
         job: ""
     })
 
+    const isChanged = 
+        JSON.stringify(input) !== JSON.stringify(orginalData);
+
     // set selected user input into the state
     useEffect( () => {
         
         if(user){
-            setInput({
+            
+            const userDetails = ({
                 name: user.name || '',
                 age: user.age || "",
                 job: user.job || ""
             });
+
+            setInput(userDetails);
+            setOriginalData(userDetails);
         }
+        
+
     }, [user]);
 
     const handleChange = (e) => {
@@ -47,6 +57,11 @@ export const Modal = ({user, closeModal}) =>{
     }
 
     const handleUpdate = () => {
+
+        if(!isChanged){
+            alert('No changed detected');
+            return
+        }
         updateUser();
     }
 
@@ -67,7 +82,7 @@ export const Modal = ({user, closeModal}) =>{
                            scale-100">
             
                 <div className='flex justify-between
-                                mb-5'>
+                                mb-1'>
                     
                     <h2 className="font-bold
                             text-2xl mb">
@@ -80,6 +95,8 @@ export const Modal = ({user, closeModal}) =>{
                         onClick={closeModal}/>
 
                 </div>
+
+                <p className='mb-5'>Make changes to enable update</p>
 
                 <div className='flex flex-col gap-2
                                 items-center'>
@@ -106,11 +123,18 @@ export const Modal = ({user, closeModal}) =>{
                     
                     <div className='flex w-full gap-5 mx-3'>
 
-                        <button className="bg-amber-400 rounded-2xl
+                        <button 
+                            className = {`bg-amber-400 rounded-2xl
                                         w-1/2 h-10 text-md
                                         hover:translate-y-0.5
-                                        duration-200 mt-3"
-                                onClick={handleUpdate}>
+                                        duration-200 mt-3
+                                        ${!isChanged ? 
+                                            'bg-gray-300 cursor-not-allowed' :
+                                            'bg-amber-300 hover:translate-y-0.5 duration-200'
+                                        }`}
+
+                                onClick={handleUpdate}
+                                disabled={!isChanged}>
                             Update Details
                         </button>
 
@@ -132,28 +156,3 @@ export const Modal = ({user, closeModal}) =>{
 }
 
 
-/*
-    complete work flow
-    ------------------
-
-    User clicks edit (on parent)
-        ↓
-    selectedUser set
-        ↓
-    Modal opens 
-        ↓
-    useEffect fills inputs
-        ↓
-    User edits inputs
-        ↓
-    handleChange updates state
-        ↓
-    Click Update
-        ↓
-    updateDoc()
-        ↓
-    Firestore updates
-        ↓
-    onSnapshot updates UI
-
-*/

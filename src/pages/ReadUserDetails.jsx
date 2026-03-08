@@ -1,52 +1,82 @@
 import { useState, useEffect } from 'react';
-import { doc, getDocs, collection, deleteDoc, onSnapshot } from "firebase/firestore"
+import { doc, query, orderBy, collection, deleteDoc, onSnapshot } from "firebase/firestore"
 import { db } from "../services/firebase.config";
 import { Modal } from '../components/Modal';
 import editIcon from '../assets/icons/edit-icon.svg';
 import deleteIcon from '../assets/icons/delete-icon.svg';
+import { Spinner } from '../components/Spinner';
 
 export const ReadUserDetails = () => {
 
     const [selectedUser, setSelectedUser] = useState(null);
     const [userDetails, setUserDetails] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [sortOption, setSortOptions] = useState('newest');
+
+    const sort = {
+        newest: orderBy('createdAt', 'desc'),
+        nameAsc: orderBy('name', 'asc'),
+        nameDesc: orderBy('name', 'desc'),
+        age: orderBy('age', 'asc'),
+        job: orderBy('job', 'asc')
+    }
+
+    const handleSorting = (option) => {
+        return query(collection(db, 'userData'), sort[option])
+    }
     
     useEffect(() => {
         
-        const getUser = onSnapshot(
-            collection(db, "userData"),
-            (snapshot) => {
+        setLoading(true);
+        const sortedQuery = handleSorting(sortOption);
+
+        const getUser = onSnapshot(sortedQuery, (snapshot) => {
 
                 const userData = snapshot.docs.map(doc => ({
                     id: doc.id,...doc.data()
                 }))
 
-                setUserDetails(userData);
-            }
-        );
+                setTimeout(() => {
+                    setUserDetails(userData);
+                    setLoading(false)
+                }, 1000);
+            });
 
         return () => getUser();
-    }, [])
+    }, [sortOption])
 
+    // Delete function
     const handleDelete = async(id) => {
+        setLoading(true);
+        
         try {
             const docRef = doc(db, 'userData', id);
-            await deleteDoc(docRef);
+            await Promise.all([
+                deleteDoc(docRef),
+                new Promise(resolve => setTimeout(resolve,300))
+            ])   
             
             const newUsersData = userDetails.filter((item) => item.id !== id);
             setUserDetails(newUsersData);
 
             alert('User Data deleted successfully!!!');
+            setLoading(false);
 
         } catch (error) {
             console.log(error.message)
         }
     }
 
+    // Edit function
     const handleUpdate = (user) => {
         console.log(user);
         setSelectedUser(user);
         setIsOpen(true);
+    }
+
+    if(loading){
+        return <Spinner/>
     }
     
     return(
@@ -55,9 +85,24 @@ export const ReadUserDetails = () => {
                         justify-center
                         m-10">
 
-            <h2 className='font-bold mb-2 
-                           text-2xl'>
-                        Users Data</h2>
+            <div className='flex justify-between
+                            w-full mb-4'>
+
+                <h2 className='font-bold
+                            text-2xl'>
+                            Users Data</h2>
+ 
+                <select className='border p-2 rounded'
+                        value={sortOption}
+                        onChange={(e) => setSortOptions(e.target.value)}>
+                        
+                    <option value={'newest'}>Newest</option>
+                    <option value={'nameAsc'}>Name (A → Z )</option>
+                    <option value={'nameDesc'}>Name (Z → A )</option>
+                    <option value={'age'}>Age</option>
+                    <option value={'job'}>Job</option>
+                </select>
+            </div>
 
             <div className='grid grid-cols-[40px_200px_80px_200px_40px_40px]
                             font-semibold border-b pb-2  
